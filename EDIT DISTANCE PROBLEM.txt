@@ -1,0 +1,150 @@
+                                              EDIT DISTANCE PROBLEM
+
+Two ways to solve that:
+1. Brute force method
+2. DP solution
+
+                                               BRUTE FORCE SOLUTION
+
+#include<iostream>
+#include<string>
+ 
+using namespace std;
+ 
+//we will be processing the src and dest string from the rear end. 
+//If the current character matches in both string, we proceed for next character.
+//else we will apply all the 3 operations one by one, and select the one which takes 
+//minimum number of overall edit operations to convert src to dest
+int minEditDistanceBrute(string src, string dest, int len1, int len2)
+{
+    //if we have already attained the dest string, we can simply remove the left out characters in src string
+    if(len2==0)
+    {
+        return len1;
+    }
+ 
+    //if the entire src string is process, we can simply insert all the remaining characters of dest string
+    if(len1==0)
+    {
+        return len2;
+    }
+ 
+    //if current character of the src and dest is same, no operation is required to be done
+    if(src[len1-1]==dest[len2-1])
+    {
+        return minEditDistanceBrute(src, dest, len1-1, len2-1);
+    }
+ 
+ 
+    //if current character is different for src and dest string
+    else
+    {
+        //if the required character of dest string is inserted in src string
+        int x=1+minEditDistanceBrute(src,dest,len1,len2-1);
+ 
+        //if the current character of src is removed
+        int y=1+minEditDistanceBrute(src,dest,len1-1,len2);
+ 
+        //if the current character of the src string is replaced with the current character of the dest string
+        int z=1+minEditDistanceBrute(src,dest,len1-1,len2-1);
+ 
+ 
+        //now, choose the operation which require minimum number of overall operations out of these
+        return min(x,min(y,z));
+ 
+    }
+}
+ 
+ 
+int main()
+{
+    string src,dest;
+ 
+    cout<<"Enter source string   ";
+    getline(cin, src);
+ 
+    cout<<"Enter destination string   ";
+    getline(cin, dest);
+ 
+    int len1=src.length();  //length of src string
+    int len2=dest.length(); //length of dest string
+ 
+    cout<<"Minimum number of edit operations required for transforming \nsource string to destination string is "<<minEditDistanceBrute(src,dest,len1,len2);
+ 
+    cout<<endl;
+    return 0;
+}
+
+
+                                         DYNAMIC PRAGRAMMING
+
+#include<iostream>
+#include<string>
+ 
+using namespace std;
+ 
+int minEditDistance(string src, string dest, int len1, int len2)
+{
+    int i, j;
+ 
+    //create a matrix of order (len1+1)*(len2+1) to memoize values
+    int edit[len1+1][len2+1];
+ 
+    //edit[i][j]=minimum number of edit operations required to transform src[0....(i-1)] to dest[0...(j-1)]
+ 
+    //initializing
+    for(i=0;i<=len1;i++)
+        edit[i][0]=i;    //min operations required to transform src[0...i-1] to empty dest string
+ 
+    for(j=0;j<=len2;j++)
+        edit[0][j]=j;   //min operations required to transform empty src to dest[0...j-1]
+ 
+    //now, start filling the matrix row wise
+    for(i=1;i<=len1;i++)
+    {
+        for(j=1;j<=len2;j++)
+        {
+            //if current character of both strings match
+            if(src[i-1]==dest[j-1])
+            {
+                edit[i][j]=edit[i-1][j-1];
+            }
+ 
+            //mismatch
+            else
+            {
+                //try applying all operations and choose the one which costs minimum
+                int x=1+edit[i-1][j];    //delete 
+                int y=1+edit[i][j-1];    //insert
+                int z=1+edit[i-1][j-1];  //replace
+ 
+                edit[i][j]=min(x,min(y,z));
+ 
+            }
+        }
+    }
+ 
+    //now, return the final value 
+    return edit[len1][len2];
+ 
+}
+ 
+ 
+int main()
+{
+    string src,dest;
+ 
+    cout<<"Enter source string   ";
+    getline(cin, src);
+ 
+    cout<<"Enter destination string   ";
+    getline(cin, dest);
+ 
+    int len1=src.length();  //length of src string
+    int len2=dest.length(); //length of dest string
+ 
+    cout<<"Minimum number of edit operations required for transforming \nsource string to destination string is "<<minEditDistance(src,dest,len1,len2);
+ 
+    cout<<endl;
+    return 0;
+}                                         
