@@ -1,8 +1,8 @@
                      KADANE'S ALGO
 
 There are two approches to solve the kadane's algorithm:
-1. Brute Force algorithm
-2. DP
+1. Brute Force solution
+2. DP solution
 
                                          BRUTE FORCE SOLUTION
 
