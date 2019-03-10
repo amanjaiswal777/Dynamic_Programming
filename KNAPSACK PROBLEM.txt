@@ -1,0 +1,137 @@
+                                0/1 KNAPSACK PROLEM
+
+Two methods are shown here for solving the knapsack problem:
+1. Recursive solution
+2. Using DP
+
+                                RECURSIVE SOLUTION
+
+#include<iostream>
+using namespace std;
+ 
+//function to recursive check every subset of items
+int knapsack(int w[], int p[], int n, int M)
+{
+    //In every pass, we can either include nth item or not
+ 
+    //if the capacity of knapsack is left to NIL, no value can be attained
+    if(M==0)
+        return 0;
+ 
+    //if no more items are left, no value can be attained
+    if(n==0)
+        return 0;
+ 
+    //if current item, weighs more than the capacity of knapsack, it can not be included
+    if(w[n-1]>M)
+        return knapsack(w,p,n-1,M);
+ 
+    //else select the maximum value of once including the current item and once not including it
+    return max(knapsack(w,p,n-1,M),p[n-1]+knapsack(w,p,n-1,M-w[n-1]));
+}
+ 
+int main()
+{
+    int i,n;
+    int M;  //capacity of knapsack
+ 
+    cout<<"Enter the no. of items ";
+    cin>>n;
+ 
+    int w[n];  //weight of items
+    int p[n];  //value of items
+ 
+    cout<<"Enter the weight and price of all items"<<endl;
+    for(i=0;i<n;i++)
+    {
+        cin>>w[i]>>p[i];
+    }
+ 
+    cout<<"enter the capacity of knapsack  ";
+    cin>>M;
+ 
+    cout<<"The maximum value of items that can be put into knapsack is "<<knapsack(w,p,n,M);
+ 
+    return 0;
+} 
+
+                                        DYNAMIC PROGRAMING SOLUTION
+
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int knapsack_dp(int n, int M, int w[], int p[])
+{
+    int i,j;
+ 
+    //create a matrix to memoize the values using dynamic programming
+    int knapsack[n+1][M+1];
+ 
+    //knapsack[i][j] denotes the maximum attainable value of items in knpasack with i available 
+    //items and capacity of knapsack being j
+ 
+    //initializing knapsack[0][j]=0 for 0<=j<=M
+    //because if there is no item, no value can be attained
+    for(j=0;j<=M;j++)
+        knapsack[0][j]=0;
+ 
+    //initializing knapsack[i][0]=0 for 0<=i<=n,
+    //because in a bag of zero capacity, no item can be placed
+    for(i=0;i<=n;i++)
+        knapsack[i][0]=0;
+ 
+    //now, filling the matrix in bottom up manner
+    for(i=1;i<=n;i++)
+    {
+        for(j=1;j<=M;j++)
+        {
+            //check if the weight of current item i is less than or equal to the capacity of sack,
+            //take maximum of once including the current item and once not including
+            if(w[i-1]<=j)
+            {
+                knapsack[i][j]=max(knapsack[i-1][j],p[i-1]+knapsack[i-1][j-w[i-1]]);
+            }
+ 
+            //can not include the current item in this case
+            else
+            {
+                knapsack[i][j]=knapsack[i-1][j];
+            }
+        }
+    }
+ 
+ 
+    return knapsack[n][M];
+ 
+ 
+}
+ 
+int main()
+{
+    int i,j;
+    int n;  //number of items
+    int M;  //capacity of knapsack
+ 
+    cout<<"Enter the no. of items ";
+    cin>>n;
+ 
+    int w[n];  //weight of items
+    int p[n];  //value of items
+ 
+    cout<<"Enter the weight and price of all items"<<endl;
+    for(i=0;i<n;i++)
+    {
+        cin>>w[i]>>p[i];
+    }
+ 
+    cout<<"enter the capacity of knapsack  ";
+    cin>>M;
+ 
+ 
+    int result=knapsack_dp(n,M,w,p);
+ 
+    //the maximum value will be given by knasack[n][M], ie. using n items with capacity M
+    cout<<"The maximum value of items that can be put into knapsack is "<<result;
+ 
+    return 0;
+}                                        
