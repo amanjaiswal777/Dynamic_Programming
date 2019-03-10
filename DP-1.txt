@@ -1,0 +1,67 @@
+Dynamic Programming example
+
+Consider a program to generate nth fibonacci numbers
+
+3 approaches i will show you:
+      1. Simple program
+      2. DP using memorization approach
+      3. DP using tabulation approach
+
+SIMPLE PROGRAM
+
+int Fib(int n) 
+{ 
+     if(n<=1) 
+     { 
+          return n; 
+     } 
+     else 
+     { 
+          return (fibonacci(n-1)+fibonacci(n-2)); 
+     } 
+}
+
+DP USING MEMORIZATION 
+
+int memoize[]; 
+//method to initialize memoize array to -1 
+ 
+void initialize() 
+{ 
+	... 
+} 
+ 
+int Fib(int n) 
+{ 
+	if(memoize[n]==-1) 
+	{ 
+		//means the solution is not yet calculated 
+		if(n<=1) 
+		{ 
+			memoize[n]=1; 
+		} 
+ 
+		else 
+		{ 
+			memoize[n]=Fib[n-1]+Fib[n-2]; 
+		} 
+	} 
+	return memoize[n]; 
+}
+
+DP USING TABULATION
+
+int table[N]; 
+void setup_fib() 
+{ 
+    table[0] = 1; 
+    table[1] = 1; 
+ 
+    for (int i = 2; i < N; i++) 
+        table[i] = table[i-1] + table[i-2]; 
+} 
+ 
+int Fib(int x)  
+{  
+	return table[x];  
+}
